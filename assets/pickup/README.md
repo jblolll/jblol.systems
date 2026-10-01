@@ -19,6 +19,8 @@ In studs, relative to the `Body` MeshPart, Roblox axes (front is -Z).
 | `SteeringWheel` | (-1.10, 0.04, -0.83) | pivot is the hub |
 | `WheelFL` / `WheelFR` | (-2.25 / 2.25, -2.54, -3.70) | radius 1.05, axle along X |
 | `WheelRL` / `WheelRR` | (-2.25 / 2.25, -2.54, 3.60) | same |
+| `NitroKit` | (0, -0.34, 3.95) | nitro upgrade: roll bar, two NITRO bottles, boost pipes. Hide until bought |
+| `NitroFlames` | (0, -2.17, 7.34) | boost flames. Hide normally, show only while boosting (Material Neon looks good) |
 
 ## Where things go
 - Driver seat (top of the left cushion): (-1.10, -1.53, 0.18). Passenger: (1.10, -1.53, 0.18).
@@ -28,3 +30,15 @@ In studs, relative to the `Body` MeshPart, Roblox axes (front is -Z).
 ## Suggested stats
 Same capacity as the caddy (2 stacks at first, up to 4 x 3 boxes), but faster: about 38 studs/s base, up to 50 with upgrades
 (the caddy is ~26 -> 34).
+
+## Nitro upgrade
+See `pickup_nitro_preview.png`. Nothing on the kit sits where the box stacks go.
+- Boost pipe tips (where flames start): (-0.85, -2.17, 6.57) and (0.85, -2.17, 6.57). Put an Attachment there with a
+  `ParticleEmitter` (orange/blue, short Lifetime) as well as, or instead of, the `NitroFlames` mesh.
+- Suggested levels at Purr Autos:
+
+| Level | Boost | Duration | Cooldown | Price |
+|---|---|---|---|---|
+| 1 | +40% speed | 2 s | 12 s | 2,500 |
+| 2 | +40% speed | 3 s | 10 s | 4,000 |
+| 3 | +50% speed | 4 s | 8 s | 6,500 |
