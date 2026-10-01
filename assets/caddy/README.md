@@ -18,6 +18,8 @@ All in studs, relative to the `Body` MeshPart's position, in Roblox axes (front 
 | `WheelFL` / `WheelFR` | (-2.15 / 2.15, -1.33, -3.58) | pivot is the axle centre, axle runs along X, radius 0.85 |
 | `WheelRL` / `WheelRR` | (-2.15 / 2.15, -1.33, 3.02) | same |
 | `SteeringWheel` | (-1.06, 1.24, -2.11) | pivot is the hub, can be turned for steering |
+| `TowHitch` | (0, -1.09, 5.24) | tow hitch upgrade: receiver + chrome ball under the rear bumper. Hide it until the upgrade is bought |
+| `TowBar` | (0, -0.77, 7.32) | the bar that tows the bike. Only shown while a bike is hitched |
 
 ## Where things go
 - Driver seat (top of the left cushion): (-1.10, 0.24, -0.23). Passenger: (1.10, 0.24, -0.23).
@@ -29,3 +31,17 @@ All in studs, relative to the `Body` MeshPart's position, in Roblox axes (front 
 - If it imports at the wrong size, change **Scale Unit** in the importer until `Body` is about 5.16 studs wide.
 - For physics, use simple invisible Parts for collisions and wheels (like the bike's wheel Parts + `HingeConstraint`)
   and set the MeshParts to `CanCollide = false`.
+
+## Tow hitch upgrade (towing the bike)
+See `caddy_tow_hitch_preview.png`. The bike rolls on its own wheels behind the caddy, facing the same way:
+
+- **Hitch ball centre:** (0, -0.95, 5.75) from `Body`. The bar's coupler sits on this point.
+- **Bike clamp point:** (0, -0.80, 8.97) from `Body`. This is where the bike's front axle goes. The bar's yoke grips
+  both sides of the front fork there.
+- **Bike end:** use the bike's `Drive.FrontWheelAxle` attachment, which is on the seat, not on the wheel. The wheel spins,
+  so clamping to it would spin the bar too. Weld `TowBar` to `bike.Drive` so the clamp point lands on `FrontWheelAxle`.
+- **Caddy end:** a `BallSocketConstraint` between an attachment at the ball (on `TowHitch`) and one at the same point
+  on `TowBar`. Use limits like the bike wagon (`UpperAngle` 35, twist limits on), so the bike swings behind
+  in turns but can't flip over.
+- Add `NoCollisionConstraint`s between the bike and the caddy, unanchor the bike and set its network owner to the
+  driver (same as `WagonService.attach`).
