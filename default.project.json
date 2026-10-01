@@ -2,11 +2,22 @@
   "name": "jblol",
   "tree": {
     "$className": "DataModel",
-    "ServerScriptService": { "$path": "src/server" },
-    "ReplicatedStorage": { "$path": "src/shared" },
+    "ServerScriptService": {
+      "$ignoreUnknownInstances": true,
+      "RojoServer": { "$path": "src/server" }
+    },
+    "ReplicatedStorage": {
+      "$ignoreUnknownInstances": true,
+      "RojoShared": { "$path": "src/shared" }
+    },
     "StarterPlayer": {
       "$className": "StarterPlayer",
-      "StarterPlayerScripts": { "$path": "src/client" }
+      "$ignoreUnknownInstances": true,
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "$ignoreUnknownInstances": true,
+        "RojoClient": { "$path": "src/client" }
+      }
     }
   }
 }

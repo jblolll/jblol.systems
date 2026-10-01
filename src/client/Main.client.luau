@@ -1,2 +1,2 @@
-local Greeting = require(game.ReplicatedStorage.Greeting)
+local Greeting = require(game.ReplicatedStorage.RojoShared.Greeting)
 print("[client]", Greeting.hello)
