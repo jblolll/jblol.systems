@@ -19,6 +19,7 @@ All in studs, relative to the `Body` MeshPart's position, in Roblox axes (front 
 | `WheelRL` / `WheelRR` | (-2.15 / 2.15, -1.33, 3.02) | same |
 | `SteeringWheel` | (-1.06, 1.24, -2.11) | pivot is the hub, can be turned for steering |
 | `TowHitch` | (0, -1.09, 5.24) | tow hitch upgrade: receiver + chrome ball under the rear bumper. Hide it until the upgrade is bought |
+| `Canopy` | (0, 2.35, -0.78) | canopy roof upgrade: striped awning on 4 chrome posts. Hide until bought |
 | `TowBar` | (0, -0.77, 7.32) | the bar that tows the bike. Only shown while a bike is hitched |
 
 ## Where things go
@@ -45,3 +46,9 @@ See `caddy_tow_hitch_preview.png`. The bike rolls on its own wheels behind the c
   in turns but can't flip over.
 - Add `NoCollisionConstraint`s between the bike and the caddy, unanchor the bike and set its network owner to the
   driver (same as `WagonService.attach`).
+
+## Canopy roof upgrade
+See `caddy_canopy_preview.png`. The stripes and the scalloped edge use the paint colour from the texture, so the
+canopy always matches the caddy: set the same `TextureID` on `Canopy` as on the other parts. The roof underside is
+6.3 studs above the ground, which clears a seated character's head, and the rear posts continue the cargo rail posts
+so the bed and stacked boxes are untouched.
