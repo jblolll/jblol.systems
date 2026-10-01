@@ -1,0 +1,12 @@
+{
+  "name": "jblol",
+  "tree": {
+    "$className": "DataModel",
+    "ServerScriptService": { "$path": "src/server" },
+    "ReplicatedStorage": { "$path": "src/shared" },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": { "$path": "src/client" }
+    }
+  }
+}
