@@ -16,7 +16,7 @@ In studs, relative to the `Body` MeshPart, Roblox axes (front is -Z).
 |---|---|---|
 | `Body` | (0, 0, 0) | 15.6 long x 6.5 wide x 5.8 tall, ~10k triangles |
 | `Windows` | (0, 1.22, -0.26) | one sealed glass piece; set **Transparency 0.4**, Material Glass |
-| `SteeringWheel` | (-1.25, 0.19, -1.11) | pivot is the hub |
+| `SteeringWheel` | (-1.25, 0.07, -0.88) | pivot is the hub |
 | `WheelFL` / `WheelFR` | (-2.55 / 2.55, -2.77, -4.41) | radius 1.15, axle along X |
 | `WheelRL` / `WheelRR` | (-2.55 / 2.55, -2.77, 4.19) | same |
 | `NitroKit` | (0, 0.28, 4.62) | nitro upgrade: roll bar + NITRO bottles + boost pipes. **Hidden until bought** |
