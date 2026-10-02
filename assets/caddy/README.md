@@ -21,6 +21,8 @@ All in studs, relative to the `Body` MeshPart's position, in Roblox axes (front 
 | `TowHitch` | (0, -1.09, 5.24) | tow hitch upgrade: receiver + chrome ball under the rear bumper. Hide it until the upgrade is bought |
 | `Canopy` | (0, 2.35, -0.78) | canopy roof upgrade: striped awning on 4 chrome posts. Hide until bought |
 | `TowBar` | (0, -0.77, 7.32) | the bar that tows the bike. Only shown while a bike is hitched |
+| `CargoCage` | (0, 2.40, 3.09) | cargo cage upgrade: steel frame + wire grid over the bed. Hide until bought |
+| `CageGate` | (-0.015, 2.37, 5.24) | the cage's rear gate with padlock and "NO DOGS!" sign. Hide until bought |
 
 ## Where things go
 - Driver seat (top of the left cushion): (-1.10, 0.24, -0.23). Passenger: (1.10, 0.24, -0.23).
@@ -52,3 +54,22 @@ See `caddy_canopy_preview.png`. The stripes and the scalloped edge use the paint
 canopy always matches the caddy: set the same `TextureID` on `Canopy` as on the other parts. The roof underside is
 6.3 studs above the ground, which clears a seated character's head, and the rear posts continue the cargo rail posts
 so the bed and stacked boxes are untouched.
+
+## Cargo cage upgrade (keeps the dogs out)
+See `caddy_cargo_cage_preview.png`. A dark steel frame with a white wire grid that clamps onto the bed rails and
+covers the sides, front and top of the bed. The back is a lockable gate with a brass padlock and a "NO DOGS!" sign.
+
+- **Fits full stacks:** the inside is 6.6 studs from the ground, so 3-high box stacks (`MaxLevel`) fit.
+- **Fits with the canopy:** the front of the cage roof slopes down under the canopy's back edge, so both upgrades can
+  be on at the same time.
+- **Paint:** both parts use the same texture as the rest of the caddy. Set the same `TextureID` on them and they match
+  every paint job. The frame and wires are neutral steel colours on every paint.
+- **The gate opens:** `CageGate` is its own part so the player can open it to load boxes. Its hinge is a vertical axis at
+  (-2.23, ·, 5.15) from `Body`, which is (-2.215, 0, -0.087) from the `CageGate` centre. To swing it open (outward,
+  towards the back), rotate it around that axis, using a `HingeConstraint` or a tween of
+  `gate.CFrame = hingeCF * CFrame.Angles(0, -angle, 0) * hingeCF:Inverse() * closedCF`.
+- **Gameplay idea:** while the cage is on and the gate is shut, dogs can't take pastries from the caddy. Have them sniff
+  around and give up, or only let them steal while the gate is open.
+- **Size:** CargoCage is about 4,400 triangles and CageGate about 1,600.
+- **Texture change:** the 5 caddy textures now have the sign artwork in a spot that was empty before. Nothing else
+  changed, so re-upload them and keep using them for every part.
