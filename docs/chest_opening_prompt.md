@@ -298,3 +298,49 @@ work. Restore everything afterwards.
 - **Frame rate:** the stage holds a stable frame rate on the phone emulator.
 - **Repeat opens:** 10 opens in a row work, with no leftover parts, lights or beams and no camera drift.
 - **Restore:** the Lighting settings are restored exactly afterwards.
+
+## K. FIX: the camera "flying" to the stage looks weird
+**The problem:** right now, when an opening starts, the camera visibly **flies from the player across the map to the
+stage**. That looks broken and unprofessional:
+- It shows the world streaming in, the stage floating far away, and the camera passing through walls and terrain.
+- It drags on for too long.
+- The movement feels mechanical (linear or constant speed, sometimes with a jolt at the end).
+
+**What I want instead (a "cut" transition, the way top games do it):**
+1. **Never tween the camera across the world.** The stage is far from the map, so the camera must **cut** there behind
+   a transition, not travel there.
+2. **Transition out (0.25–0.35 s):** a quick, stylish screen wipe over the player's view. Pick one:
+   - a **paw-print iris wipe** (a black screen with a paw-shaped hole that shrinks to nothing), or
+   - a fast fade to black with a small zoom-in on the screen, or
+   - a diagonal swipe in the rarity colour.
+
+   At the same time: a soft whoosh sound, music ducking, and the HUD sliding off screen (it doesn't just disappear).
+3. **While the screen is covered:**
+   - Set the camera to `Scriptable` and place it at the stage's **first shot** (the establishing shot).
+   - Preload or warm up the stage, if needed, so nothing pops in.
+   - Wait one frame so lighting and post effects are applied before showing anything.
+4. **Transition in (0.3–0.4 s):** reveal the stage with the reverse wipe or iris opening (paw shape growing). The camera
+   is **already moving** as it appears: a slow dolly-in that started while the screen was covered, so the first frame
+   isn't static. The stage lights power on one by one with "thunk" sounds as the view opens.
+5. **Movement quality for every camera shot after that:**
+   - Use eased curves (Quint/Sine InOut) or a bezier or spline path. Never linear, and never change direction
+     instantly.
+   - Blend between shots by interpolating CFrame **and** FieldOfView together, so there are no snaps.
+   - Add a very subtle handheld drift (a tiny noise offset, ±0.05 studs, ±0.3°) so the camera feels alive, not robotic.
+   - Keep the camera from overshooting the stage geometry or clipping into the pedestal.
+6. **Exit (back to the player):** use the same wipe in reverse. While covered:
+   - restore the camera type, subject, FOV and Lighting
+   - bring the HUD back with a slide-in
+
+   Then the iris opens on the player exactly where they were standing. **No flying back across the map.**
+7. **Repeat opens** (Open Again) **don't** replay the transition. The camera just moves smoothly from the results shot
+   back to the hero shot on the stage.
+
+**Implementation notes:**
+- Build the transition as a reusable `ScreenTransition` module (`Out(style)`, `In(style)`) that both crates and
+  chests use.
+- Use a ScreenGui with `IgnoreGuiInset` and a high `DisplayOrder`.
+- Make the paw mask from an ImageLabel scaled with a tween.
+
+**Test:** open from different places on the map, including inside buildings. The world must never be seen sliding past,
+and there must be no pops, black frames or flashes of the wrong scene.
