@@ -24,8 +24,8 @@ stage feel, polish and quality, but with chest-specific animations and effects t
      - Mythic: (0, -0.74, 1.41)
      - Secret: (0, -0.78, 1.42)
 
-     Store these as an attribute (`HingeOffset`) on each Lid. Rotate the Lid around the hinge's X axis to about 105°
-     to open it. Check the direction in a test.
+     Store these as an attribute (`HingeOffset`) on each Lid. Rotate the Lid around the hinge's X axis by a **positive** angle
+     (about 105°) to open it: `hinge * CFrame.Angles(math.rad(angle), 0, 0) * closedOffset`.
    - `Loot` is the coin pile inside. It starts hidden (or dark) and lights up as the lid opens.
    - If the models aren't in the place yet, tell me exactly where to put them, and build everything so it works
      as soon as they're there.

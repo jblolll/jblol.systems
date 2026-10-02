@@ -26,6 +26,8 @@ The loot pile inside gets richer too: Common is just coins, and higher rarities 
   `Lighting.Technology = Future`.
 - `chests.blend`: the source file. `chests_preview.png`: all 7 chests closed (top) and open (bottom).
   `closeups.png`: Legendary, Mythic and Secret up close.
+  `roblox_backface_check.png`: renders with back faces hidden, the way Roblox draws them, to show there are no
+  see-through gaps.
 
 ## Size and part positions
 - About 4.4 wide × 2.9 deep × 3.4 tall studs (Mythic and Secret are a bit taller because of the crystals). Scale the
@@ -51,9 +53,14 @@ local closed = hinge:ToObjectSpace(lid.CFrame)
 -- tween a NumberValue `angle` from 0 to ~105 degrees, and each step set:
 lid.CFrame = hinge * CFrame.Angles(math.rad(angle), 0, 0) * closed
 ```
-If it swings the wrong way, use `-angle`.
+A **positive** angle opens the lid up and backwards (checked against the model).
 
 ## Glow (optional)
 For extra shine on the better chests, add a `PointLight` inside `Loot` (gold, Brightness 1–2, Range 8) that turns on
 as the lid opens. For Mythic and Secret, also add one tinted pink or aqua near the crystals, plus a slow sparkle
 `ParticleEmitter`.
+
+## Fixed: see-through gaps
+Every part is now a closed, outward-facing solid. Earlier versions had lid ends built as open rings, facing the wrong
+way, which Roblox doesn't draw from that side. You could see through the lid ends, between the end rings and the lid,
+and through the inside of an open lid. Re-import all 7 FBX files.
