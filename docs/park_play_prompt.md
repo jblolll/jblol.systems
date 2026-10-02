@@ -186,7 +186,11 @@ Follow these steps in order, and test each step in Play mode before moving to th
 
    Then store each wing's rest offset from the body as an attribute or in code (`RestOffset = Body.CFrame:ToObjectSpace(Wing.CFrame)`).
 4. **Toy attachments:** on each toy, add `Grab` (where a cat's mouth or paw holds it) and `Ground` (bottom centre).
-   The feather wand also needs `Feathers` (centre of the feather bunch, for swat targeting and the string sway).
+   The **yarn ball** and **feather wand** come as multi-part models (`Ball` + `Strand`; `Stick` + `String` + `Feathers`)
+   so the strand, string and feathers can really move. Add pivot attachments:
+   - `Strand.Root`: (-0.264, 0.031, -0.174)
+   - `String.Root`: (-0.201, 0.008, 0.209)
+   - `Feathers.Knot`: (0, 0, 0.25)
 5. **Uploads and maps:** upload the textures if the FBX didn't keep them (`assets/park/textures`). Swap a butterfly's
    colourway by setting `TextureID` on all three of its parts.
 6. **Park markup:** in Whisker Park, add a folder `Workspace.WhiskerPark.Markers` with:
@@ -340,8 +344,13 @@ place(wingL, Vector3.new( 0.16, 0, 0), restL, -1)
      player, clamped to the park.
   3. The client animates a parabolic arc with spin, a bounce on landing, and dust.
   4. The nearest idle cat gets `Chase` → `ToyPlay` on that toy.
-- **The feather wand stays put.** Only its string and feathers move: animate the feather part's sway with a spring,
-  and a fast flick when a cat swats.
+- **The feather wand stays put.** Only its moving parts animate:
+  - **Feathers:** swing around `Feathers.Knot` with a spring (a gentle breeze sway at rest, a fast flick and flutter
+    when a cat swats).
+  - **String:** re-aim it every frame from `String.Root` toward the knot, so it always connects the stick tip to the
+    feathers.
+- **Yarn strand:** wiggles around `Strand.Root` with a spring while the ball is batted, and trails behind as the ball
+  rolls (rotate it so it points opposite to the roll direction).
 - **Settle:** after any move, the server stores the final CFrame (exactly on the ground, upright for the mouse and fish
   and the stick, random yaw), so new players joining see toys in the right place.
 - **Stuck check:** if a toy ever ends outside `Bounds` or isn't resting on the ground, the server moves it back to a
