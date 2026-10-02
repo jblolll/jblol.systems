@@ -214,9 +214,6 @@ Needed:
   - the factory owner leaves
   - the factory is unclaimed
   - the target box is picked up, sold or moved while the dog is biting (the dog looks confused and leaves)
-- **Caddy cage:** if a box target is in my caddy and the caddy has the `CargoCage` upgrade with the gate shut, the dog
-  can't steal. It sniffs at the cage, scratches, then gives up. Do this only if the caddy targeting already exists or
-  is simple to add; tell me which.
 - **Config module:** put every timing, range, cooldown and spawn rate in one module so I can tune it.
 
 ## 7. Test before you tell me it's done
