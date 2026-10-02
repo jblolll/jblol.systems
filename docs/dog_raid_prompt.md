@@ -23,6 +23,23 @@ VFX, good sounds, and no bugs.
 
    Check whether the paw bones (`*.003`) are children of the leg bones (the hand-animation version) or of `spine.014`
    (the CatGait version), and tell me which one is in Workspace.
+
+   **Random coat on every spawn.** The dog has 3 coat textures that all share the same UVs, so changing the coat is just
+   a matter of setting the dog MeshPart's `TextureID`:
+
+   | Coat | File | Spawn weight |
+   |---|---|---|
+   | Golden Retriever | `dog_golden.png` | 45 |
+   | Beagle | `dog_beagle.png` | 40 |
+   | Dalmatian | `dog_dalmatian.png` | 15 (rarer) |
+
+   I will upload these 3 images and give you their asset IDs. Put them in the config as
+   `Coats = { {Name, TextureId, Weight}, ... }`.
+   - Every time a dog spawns, the server picks a coat by weight and sets `TextureID` **before** the dog is parented
+     to Workspace, so it never shows the wrong coat for a frame.
+   - Store the coat name as an attribute (`Coat`) so effects and messages can use it, for example
+     "A Dalmatian is sneaking in!".
+   - If I haven't given you the IDs yet, ask me for them. Don't use placeholder IDs.
 3. **Inspect the bat.** It's a 3.6-stud MeshPart with its length along its Y axis. The middle of the grip is 1.2 studs
    below its centre, so start with `Tool.Grip = CFrame.new(0, -1.2, 0)`. Then check in a playtest that the bat sits
    naturally in the hand and points the right way, and fix the rotation if needed.
@@ -30,11 +47,27 @@ VFX, good sounds, and no bugs.
    then build it.
 
 ## 1. Gameplay rules
-**Spawning**
-- Dogs only spawn for a claimed factory whose owner is in the game.
-- A dog spawns at a random point outside, out of sight of the factory, every 60–120 s per factory. Put these numbers
-  in a config module.
-- At most 1 dog per factory at a time (also a config value).
+**Spawning: a fun challenge, never annoying**
+
+Dogs should feel like an occasional "oh no, a dog!" event that's exciting to deal with, not a constant chore.
+Put every number below in the config.
+- **Who gets dogs:** only claimed factories whose owner is in the game, has been playing for at least **3 minutes**
+  (a grace period for new joins), and has at least one finished box worth stealing.
+- **How often:** about **one raid every 4–7 minutes** per factory, at a random time in that window.
+  - After a raid ends (saved, stolen or given up), the next one is at least **4 minutes** away.
+  - Never more than **1 dog** per factory at a time.
+- **Gentle on new and idle players:**
+  - Players with very few boxes get raids less often (scale the timer up for low box counts).
+  - Players who haven't been near their factory for 2 minutes (AFK or away delivering) get no raids, so they don't
+    come back to losses they never saw coming.
+- **Fair warning:** about 5 s before the dog reaches the door, give the owner a short bark and an edge-of-screen
+  indicator, so there's always a chance to react.
+- **Escalation, but capped:** if the owner saved the last box, the next dog can be slightly faster
+  (+10% speed, max +30%). Reset this when a box is stolen, so the challenge rises a little but never becomes
+  impossible.
+- **Sanity check:** in your report, tell me the expected number of raids per 30 minutes of play with these settings.
+  It should be about 4–6.
+- A dog spawns at a random point outside the factory, out of the owner's sight, and trots in from there.
 - Dogs only go inside if the factory door is **open**. If the door is closed, the dog circles near it, sniffs and
   scratches at it for a few seconds, gives up and leaves.
 
@@ -55,7 +88,28 @@ VFX, good sounds, and no bugs.
 - **While it's running away with the pastry:** hitting it is just for revenge. The box stays gone, but the dog drops
   the pastry with a big "REVENGE!" effect, yelps and runs off faster. Ask me before adding any money or XP reward
   for this.
+- **Coin rewards** (see section 1b) for saving a box and for revenge hits.
 - **One hit is enough** to send any dog running. Give it a short hit-immunity window so one swing can't hit it twice.
+
+## 1b. Coin rewards
+Protecting your boxes should feel worth it. Give the coins on the **server**, using the existing economy:
+- add to `data.Coins` from `DataService`,
+- update `player.leaderstats.Coins`,
+- play the existing `remotes.events.CoinCollect` coin effect, the same way `BoxService:SellBoxes` does.
+
+| Event | Reward (config values) |
+|---|---|
+| **Box saved** (hit the dog while it's approaching or biting) | **35% of the target box's `Value`** (minimum 25 coins), shown as "+X SAVED!" over the box |
+| **Revenge hit** (hit the dog while it's running off with the pastry) | **15% of the stolen box's `Value`** (minimum 10 coins), shown as "+X REVENGE!" |
+| **Quick save bonus** (hit before the dog starts biting) | +10 coins extra, shown as "QUICK SAVE!" |
+
+- **Who gets paid:** the coins go to the player who landed the hit, even if it isn't the factory owner. If the owner
+  saved their own box, the owner gets it.
+- **Only once per dog:** one reward per dog. Only the first valid hit pays.
+- **No farming:** dogs only come from the natural spawn timer, so rewards can't be farmed. Never award coins for dogs
+  spawned any other way, and keep the spawn pacing from section 1 so this stays a bonus, not a money machine.
+- **Feedback:** play a bright "cha-ching" coin sound and the coin burst at the hit point. The coin counter in the
+  sidebar should tick up as usual.
 
 **Server rules**
 - The **server is the authority** for dog state, targets, the bite timer, box destruction and hit validation:
@@ -118,11 +172,11 @@ light enough for mobile (particle counts capped, and nothing permanent left behi
 | Dog spawns or is spotted | small "!" pop over its head, bouncing in. A red ping on the factory owner's screen edge pointing to the dog |
 | Approaching a box | dust puffs from the paws while running |
 | Biting | cardboard scraps and crumbs flying (Emit every bite), the box shaking, a circular damage ring over the box going from white to red, warning icon pulsing |
-| Box saved | green "SAVED!" pop (scale 1.4 → 1, Back Out), sparkle burst around the box, ring disappears |
+| Box saved | green "+X SAVED!" pop (scale 1.4 → 1, Back Out), sparkle burst around the box, coins flying into the counter, ring disappears |
 | Box destroyed | cardboard "poof" burst + crumbs + small smoke puff; the box scales down and fades rather than vanishing |
 | Running off with the pastry | the pastry model held in the mouth (welded to `spine.013`), crumb trail, a "!" over the box spot |
 | Bat hits the dog | big impact star burst + white flash, a "BONK!" comic text pop at the hit point (random tilt), stars and birds circling the dog's head while it's stunned, a dust ring under it |
-| Revenge hit | the dropped pastry bounces on the ground then poofs, gold "REVENGE!" text, a bigger burst |
+| Revenge hit | the dropped pastry bounces on the ground then poofs, gold "+X REVENGE!" text, coin burst, a bigger burst |
 | Bat whiff (miss) | swoosh trail only, no impact |
 | Dog leaves | the dog runs off with a dust trail; no visible despawn |
 
@@ -151,6 +205,7 @@ Needed:
   - a whoosh on every swing
   - a cartoon "bonk" on a hit, layered with a punchy thud
   - a sparkle sting for revenge
+  - a coin "cha-ching" for every reward
 - **Warning:** a short alert sting for the factory owner when a dog gets inside, played locally only for them.
 
 ## 6. Polish and edge cases
@@ -171,11 +226,15 @@ Run a Play test (Start Server with 2 players) and confirm:
 3. Hitting while approaching or biting saves the box, with every effect and sound.
 4. Not hitting: the box is destroyed through BoxService, the counts and save data stay correct, and the dog runs off
    with the pastry.
-5. Hitting while it's running off gives the revenge effects, and the box stays gone.
+5. Hitting while it's running off gives the revenge effects and the revenge coins, and the box stays gone.
+   Saving a box pays the save reward once. Check `leaderstats.Coins` and the saved data both go up by the right amount.
+   The coat is random across 10 spawns and never flashes the wrong texture.
 6. A cooldown or spam click never double-hits. A player out of range can't hit.
 7. Feet don't slide in the dog's walk and run, and every transition is smooth.
 8. The swing looks right in R15 and R6, and on mobile with the touch button.
-9. No errors or warnings in the output, and no leftover parts or particles after 10 raids.
+9. With the timers temporarily sped up, raids follow the pacing rules: the cooldown is respected, there are no raids
+   while AFK, and the grace period after joining works. Put the real timers back afterwards.
+10. No errors or warnings in the output, and no leftover parts or particles after 10 raids.
 
 When you're done, show me screenshots of each stage, the list of sound IDs you picked (with names), and anything you
 couldn't do or want me to decide.
