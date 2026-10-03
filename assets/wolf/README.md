@@ -1,15 +1,23 @@
 # Wolf (pastry thief)
 
 A scary but stylized wolf that matches the dog and cat style: angry slanted glowing eyes with slit pupils, a heavy
-scowling brow, a long wedge muzzle, fangs that show over the lip, spiky hackles down the neck and back, a spiky cheek
-ruff and chest ruff, a bushy tail and claws. **The mouth really opens**: the lower jaw is a separate lip with a painted
-palate, tongue and 30 teeth inside.
+scowling brow, a long wedge muzzle, fangs that show over the lip and claws. **The mouth really opens**: the lower jaw is
+a separate lip with a painted palate, tongue and 30 teeth inside.
+
+**Fur:** sculpted as layered rows of long, pointed fur clumps that overlap like real fur instead of spikes. They form a
+big neck mane from the cheeks and behind the ears down to the withers and chest, a bushy tail, elbow tufts and fluffy
+"trousers" on the back legs. The clumps are part of the body surface, so there are no floating pieces. The texture
+adds strands that follow the fur direction, lighter clump tips and darker gaps between clumps.
+
+**Teeth and claws are rooted:** each tooth starts inside the gum and each claw inside the paw (placed by casting onto
+the real surface and sinking the root in), so there are no gaps at any jaw angle. Each one copies the skin weights of
+the gum or paw it grows from, so it stays attached when the jaw opens or the toes bend.
 
 | | Wolf | Dog | Player |
 |---|---|---|---|
 | Height (to ear tips) | 2.82 studs | 2.39 | ~5 |
-| Length (nose to tail) | 3.65 | 2.78 | |
-| Triangles | 13.1k | 10k | |
+| Length (nose to tail) | 3.63 | 2.78 | |
+| Triangles | 16k | 10k | |
 
 At most 4 bone influences per vertex (the Roblox limit). Every surface faces outward and is closed, checked with
 Roblox-style rendering (back faces hidden), so there are no see-through spots, including inside the open mouth.
@@ -23,8 +31,8 @@ Roblox-style rendering (back faces hidden), so there are no see-through spots, i
   - `wolf_shadow.png`: black shadow wolf, **red** eyes, a battle scar across one eye
   - `wolf_frost.png`: white frost wolf, blue-grey saddle, **icy cyan** eyes
 - `wolf.blend`: the source file, rigged, with all 3 textures packed.
-- `wolf_preview.png`: the 3 coats plus snarling faces. `wolf_mouth_and_roblox_check.png`: renders with back faces
-  hidden, the way Roblox draws them.
+- `wolf_preview.png`: the 3 coats, a fur close-up and snarling faces. `wolf_mouth_and_roblox_check.png`: renders
+  with back faces hidden (the way Roblox draws them), plus teeth and claw close-ups.
 
 ## Skeleton (same names as the dog and cat, plus jaw and ears)
 ```
