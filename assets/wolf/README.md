@@ -30,6 +30,14 @@ Roblox-style rendering (back faces hidden), so there are no see-through spots, i
   - `wolf_timber.png`: grey timber wolf, dark saddle, cream chest, **yellow** eyes
   - `wolf_shadow.png`: black shadow wolf, **red** eyes, a battle scar across one eye
   - `wolf_frost.png`: white frost wolf, blue-grey saddle, **icy cyan** eyes
+  - **Rare coats** (`wolf_rare_preview.png`):
+    - `wolf_ember.png`: charcoal wolf with glowing molten cracks, smouldering orange fur tips and ear tips, **orange** eyes
+    - `wolf_celestial.png`: night-sky wolf, indigo fur with purple and teal nebula patches, stars, starlight-blue
+      fur tips, **gold** eyes
+    - `wolf_golden.png`: polished gold wolf with a bright sheen, white-gold fur tips, sparkles, **emerald** eyes
+
+  Tip for the rare coats in Roblox: a texture can't glow by itself. To make the ember and celestial wolves pop, add a
+  dim `PointLight` (orange or blue) to the head and a slow `ParticleEmitter` (embers, stars or gold sparkles).
 - `wolf.blend`: the source file, rigged, with all 3 textures packed.
 - `wolf_preview.png`: the 3 coats, a fur close-up and snarling faces. `wolf_mouth_and_roblox_check.png`: renders
   with back faces hidden (the way Roblox draws them), plus teeth and claw close-ups.
