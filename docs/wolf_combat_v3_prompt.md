@@ -181,6 +181,54 @@ A normal hit still does 1 Resolve, a Counter does 2 and a charged hit does 3.
 - **Hit registration:** server-side with lag forgiveness (use the player's position as of their ping/2 ago, capped
   at 0.15 s). Fast, but fair.
 
+### 2c. Combat focus: once a fight starts, the wolf stays in it
+**Bug I saw:** a Celestial wolf was in the middle of fighting me and suddenly turned around and went for my box. That
+must never happen. Once a fight starts, **the fight is the wolf's only goal** until it's over.
+
+**When a fight starts** (any of these):
+- a player hits the wolf (any wolf type except Golden)
+- the wolf attacks a player (Hunters on sight; Guards after the warning)
+- a player walks into a Guard's 6-stud attack range
+
+The wolf then enters **Combat Lock** on that player (store it as attributes, for example `InCombat = true`,
+`CombatTarget = player.UserId`).
+
+**While in Combat Lock:**
+- The wolf **ignores boxes, shelves, machines and every raid objective.** The objective/target-picking code must not
+  run at all while `InCombat` is true. Check every place that picks a target: the AI think loop, any "re-check
+  target" timer, pathfinding re-path callbacks, ability follow-ups (for example, after a Celestial blink it must
+  re-target the **player**, not the nearest box).
+- **Pause every raid timer** that could pull it away: max raid time, "give up" timers, the "switch to stealing after
+  25 s" rule from the 2.0 prompt (**delete that rule**), and the "Thieves fight back for 4 s then return to stealing"
+  rule from 2.0 (**delete that too**). Thieves that get hit now fight to the end like everyone else.
+- If it was **carrying a box** when the fight started, it **drops the box** (through `BoxService`; the box lands on
+  the floor and can be picked up again) and fights.
+- **Stunned, frozen or dazed players are not a reason to leave.** That's exactly when it presses the attack and
+  bites. Being stunned doesn't end the fight.
+- If the wolf gets staggered, blinks, vanishes or dodges, it comes back to the **same player** afterwards.
+
+**Switching targets (multiplayer):** the wolf may switch from one player to another, but only to a **player**, never
+to a box:
+- It keeps its current target unless another player has dealt **more damage to it in the last 5 s**, or the current
+  target is out of reach (see below).
+- When it switches, show it clearly: a snarl toward the new target, and that player gets the red "You're being
+  hunted!" marker.
+
+**The fight only ends when one of these happens:**
+
+| How it ends | What happens next |
+|---|---|
+| **The target player dies** (and no other player is fighting it) | the death-cam sequence from section 1b: victory howl, steals the best box, runs. **Only now** does it go for a box. |
+| **The wolf is driven off** (Resolve 0) | the normal retreat |
+| **The target leaves the game or respawns** with no other player fighting it | it goes back to its raid objective |
+| **The target flees**: farther than **40 studs** from the wolf **and** out of its sight for **5 s** | the wolf first searches where it last saw the player (sniffs, looks around, 3 s). If it doesn't find them, it goes back to its raid objective. A player who runs away gives up their box; a player who stays and fights doesn't. |
+
+- **Leash:** during combat, the 60-stud leash from 2.0 is measured from the **raided factory**. If the player
+  pulls the wolf past it, the fight ends as if the player fled.
+- **Debug:** in the Wolf debug view, show `InCombat`, the current target and the reason when combat ends (for
+  example `combat ended: target died`). The debug log must never show an objective being chosen while
+  `InCombat = true`.
+
 ---
 
 ## 3. Every attack needs real effects
@@ -398,6 +446,9 @@ with the debug log on. Then for **each** type, fight it for 60 s and confirm:
 - [ ] Frost Breath sweeps and can freeze; Celestial blinks behind me and follows up; Ember sets me on fire and Flame
       Dashes; Shadow vanishes and ambushes; Timber does Double Snap → Lunge combos and feints.
 - [ ] Every attack and ability has its telegraph effect + sound, action effect and impact effect.
+- [ ] **Combat focus:** fight each type (including Celestial after it blinks, and Timber while carrying a box) for
+      60+ s near my boxes. The wolf never leaves the fight to go for a box while I'm alive and fighting. A carried box
+      gets dropped when the fight starts. It only steals after I die, or after I run away and it loses me.
 - [ ] Standing still or running in a straight line gets me hit. Sidestepping at the right moment dodges.
 - [ ] I can die: ragdoll → wolf cam with letterbox and caption → the wolf howls, steals the best box (`BoxService`
       data correct) and runs → fade → respawn at my factory with 3 s spawn protection. A second player can still
