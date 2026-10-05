@@ -115,14 +115,15 @@ the **real cause** in the code before fixing it, and tell me what it was in your
 
 ## 2. UI cleanup: almost no text
 My rule: **during raids and fights there is no text on the screen and no text above the wolf**, except:
-- the wolf's **health bar** (Resolve bar), without a name label if it has one
+- the wolf's **health bar** (redesigned, see section 2b)
+- **damage numbers** when you hit a wolf (redesigned and animated, see section 2c)
 - a **"DODGED"** pop above the wolf when the player dodges one of its attacks (see below)
 
 **Remove these:**
 - the "A Frost Wolf is coming!" banner and **any** raid announcement text, including the server-wide Golden Wolf
   text and the Full Moon banner text (replace them with sound and effects only)
 - every attack name on screen or over the wolf ("Lunge", "Frost Breath", "Blink", and so on)
-- "COUNTER!", "ENRAGED!", "Fake!", "DRIVEN OFF!", "STOLEN!", "RECOVERED!", "SAVED!", damage numbers, "You're being
+- "COUNTER!", "ENRAGED!", "Fake!", "DRIVEN OFF!", "STOLEN!", "RECOVERED!", "SAVED!", "You're being
   hunted!", the first-encounter tip cards, and the death caption ("The Shadow Wolf stole…")
 - the **custom player health bar** I asked for before. **Delete it** and use Roblox's built-in health bar
   (re-enable `Enum.CoreGuiType.Health` if something disabled it)
@@ -136,7 +137,7 @@ My rule: **during raids and fights there is no text on the screen and no text ab
   is on screen.
   - It shows for the incoming wolf from the howl until it arrives, and for any wolf within 40 studs that you can't
     see.
-- the **day/night clock** (it's an icon, no text needed; remove its phase label text if it has one)
+- the **day/night clock** (redesigned, see section 2d)
 
 **"DODGED" pop:**
 - **When:** a wolf's attack (Snap, Lunge, ability hit) misses a player who was its target and was **within 8 studs
@@ -147,8 +148,117 @@ My rule: **during raids and fights there is no text on the screen and no text ab
   - a small swoosh sound
 - At most one at a time per wolf. It only shows for the dodging player.
 
-Since the text is gone, **effects and sound must carry all the information**: the wind-up poses, eye flares, ground
-indicators, distinct telegraph sounds, the enrage aura, and so on (section 5).
+Since the text is gone, **the visuals must carry all the information**: the wind-up poses, eye flares, ground
+indicators, the enrage aura, and so on (section 5). Attacks **don't** need their own warning sounds (see section 6).
+
+### 2b. Wolf health bar (full redesign)
+The current bar looks bad. Make it look like a **front-page boss health bar**, small and floating over the wolf.
+- **Shape and layout:** a `BillboardGui` about 1.2 studs above the head (`AlwaysOnTop = false`, `MaxDistance` 70,
+  sized in **scale** so it reads the same at any distance and on mobile).
+  - A **rounded, slightly slanted bar** (a parallelogram or a pill with a `UICorner`, about 6:1 wide), with:
+    - a dark, semi-transparent backplate with a soft drop shadow
+    - a thin outer stroke (`UIStroke`, 2 px) in the wolf's type colour, with a soft glow behind it (a blurred
+      glow image in the type colour)
+    - a **small round type emblem** on the left end: an icon per wolf type (snowflake, star, flame, crescent moon,
+      paw, coin) inside a ring
+  - **No name text and no numbers.**
+- **The fill:**
+  - a **gradient fill** (`UIGradient`) in the type colour: lighter at the top, darker at the bottom, with a
+    subtle animated shine sweeping across it every 3 s
+  - thin **dividers** marking each Resolve point, so the player can count hits
+  - Frost **Ice Armour** sits as a separate **icy layer on top** of the bar: cyan, frosted texture, crack lines,
+    shown as its own segments
+- **When the wolf is hit:**
+  1. The lost part turns **white and flashes**, and a **"damage chunk"** (a bright trailing section) holds for
+     0.25 s, then **drains smoothly** to the new value (tween 0.35 s, ease-out).
+  2. The whole bar does a quick **shake** (2–3 px, 0.15 s) and a **pulse** (scale 1.08 → 1).
+  3. Small **shards** chip off the lost segment and fall away (tiny image particles in the UI).
+- **States:**
+
+  | State | Look |
+  |---|---|
+  | Full health / not in combat | fades to 40% opacity after 4 s without being hit; full opacity when the fight starts |
+  | Low (under 30%) | the fill pulses slowly and turns darker/redder, the glow flickers |
+  | Enraged | the stroke and glow turn brighter, with animated energy (a moving gradient) along the frame |
+  | Exposed / staggered | a quick gold flash along the frame |
+  | Shadow invisible | the whole bar hides |
+  | KO | the bar **shatters** into glowing pieces that fly out and fade (section 5c) |
+
+- **Entrance:** when the bar first appears, it **slides up and scales in** (0 → 1.1 → 1, 0.25 s) and the fill
+  sweeps from empty to full.
+- **Pack companions** get a smaller, simpler version of the same bar.
+
+### 2c. Damage numbers (when you hit a wolf)
+The current damage effect is bad. Make **animated, punchy damage numbers**, like front-page fighting games:
+- **Where:** they pop out from the **hit point** on the wolf (not a fixed spot), in a `BillboardGui` per number,
+  pooled.
+- **Look:**
+  - a chunky, bold number in my game's UI font, with a thick dark outline (`UIStroke`) and a slight gradient
+  - a small shape behind it: a burst/star for normal hits
+- **Animation (0.8 s total):**
+  1. **Pop:** it starts small, **punches up** to 1.4× in 0.08 s, then settles to 1× with a bounce.
+  2. **Arc:** it flies up and slightly sideways (a random left/right arc, so numbers don't stack on top of each
+     other) with gravity, like a little toss.
+  3. **Fade:** it shrinks a little and fades out in the last 0.25 s.
+- **Per hit type:**
+
+  | Hit | Number | Colour | Extra |
+  |---|---|---|---|
+  | Normal | `1` | white with a light gold edge | — |
+  | Counter (Exposed wolf) | `2` | gold | bigger (1.3×), a starburst behind it, a quick shake |
+  | Charged | `3` | the bat's rarity colour (white for Common) | bigger (1.5×), lightning-burst shape behind it, slower arc |
+  | KO (last hit) | the damage | bright gold-white | biggest (1.8×), a radial ray burst behind it, it holds for 0.2 s before flying off |
+  | Ice armour hit | a small cracked-ice icon instead of a number | cyan | it shows the armour taking the hit |
+
+- **Combo stacking:** hits within 1 s of each other add up in a **combo counter** next to the number (`x2`, `x3`…).
+  It grows a little each hit and pops when the combo ends.
+- Each number spawns with a tiny spark burst in its colour.
+- Only the player who hit sees their own numbers. Cap it at 6 numbers on screen at once.
+
+### 2d. Day/night clock (full redesign)
+The current clock looks like slop. Redesign it as a **polished, compact HUD element** at the top centre, matching my
+game's UI style:
+- **Shape:** a **half-circle dial** (an arc about 140 × 70 px at 1080p, scaled for mobile) on a dark rounded
+  backplate with a soft shadow and a thin stroke.
+- **Inside the arc:** a **sky gradient** that changes with the time of day:
+  - day: light blue to warm white
+  - dusk: orange to pink to purple
+  - night: deep navy with a few small twinkling stars (tiny images that blink)
+  - dawn: purple to gold
+  - tween smoothly between them, never snapping
+- **Sun and moon:** a **sun icon** (with a soft glow and slowly rotating rays) travels along the arc during the day.
+  At dusk it sinks below the horizon line while the **moon icon** rises on the other side for the night.
+  - The icons move every frame (smoothly), not in steps.
+  - **Full Moon nights:** a big glowing silver moon with a soft pulsing halo, and the dial's stroke turns silver.
+- **Horizon line:** a thin line across the bottom of the arc with small silhouettes (a few trees and the factory
+  rooftop) so it reads as "sky".
+- **Progress:** a thin progress ring along the arc edge shows how far through the current phase we are.
+- **Night warning:** 20 s before night, the dial edge **pulses orange**, with a small wolf-head icon peeking up from
+  the horizon. No text.
+- **Phase change animation:** when the phase changes, the dial does a small bounce (scale 1.08 → 1) and a light
+  sweep crosses it.
+- **No text** on the dial.
+
+### 2e. Frost Wolf's Ice Armour breaking
+Breaking the Frost Wolf's shield must be **one of the most satisfying moments** in the fight.
+- **Each normal hit on the armour:**
+  - cracks spread across the ice (crack decals or crack textures that grow with each hit)
+  - small ice chips fly off
+  - a sharp **"tink/crack"** ice sound (2–3 variants)
+  - the matching icy segment on the health bar cracks
+- **When the armour breaks** (the last armour hit, or a charged hit):
+  1. A 0.08 s **freeze-frame** and a bright **cyan-white flash**.
+  2. The armour **shatters** into dozens of glowing ice shards that explode outward, spin, bounce on the ground and
+     melt away over 2 s.
+  3. A **frost shockwave ring** expands along the ground, leaving a fading frost decal.
+  4. Snowflakes and sparkles burst up, and a short cold mist puff rolls out.
+  5. Camera shake (medium) and a quick cyan tint flash on the screen.
+  6. **Sound:** a big layered **ice shatter**: a glass/ice break, crystal tinkling as the shards land, and a deep
+     cold "boom" underneath.
+  7. The armour segments on the health bar **shatter** the same way.
+  8. The wolf **staggers** back, shakes its body (shedding the last ice flakes) and growls.
+- **When the armour regrows** (once, 12 s later): ice crystals grow back over its back and shoulders with a frost
+  shimmer and a crystal "grow" sound.
 
 ---
 
@@ -451,18 +561,14 @@ These run all the time, so keep them cheap:
   | Timber | a subtle dust trail when running |
 
 - Footstep effects: small dust puffs on hard floors, plus type extras (frost prints, fire prints).
-- The Resolve bar:
-  - a clean segmented bar with a coloured edge glow in the type colour
-  - segments break off with a small shard effect when hit
-  - Frost armour shows as icy segments
-  - hidden while Shadow is invisible
+- The health bar: see section 2b.
 
 ---
 
 ## 6. Sound pass
-- Every telegraph has its **own sound** (now more important, since there's no text): growl (Snap), rising snarl
-  (Lunge), crystal hum (Frost Breath), shimmer whoom (Blink), fire build-up (Fireball/Burst), sharp growl (Ambush),
-  roar (Enrage), falling whistle (Meteor), howl (Howl).
+- **Attacks don't need their own warning sounds.** Remove the separate telegraph/warning sounds per attack (from
+  the 3.0 prompt). Keep a general growl/snarl the wolf makes while fighting, plus the sounds of the abilities
+  themselves when they happen (the breath, the fire, the teleport, the impacts).
 - Every impact is layered (a transient + a body + a tail) and every repeated sound has 2–3 variants with ±8% pitch.
 - **Bat hits:** normal thwack, heavier counter, big charged bonk, layered KO hit (1a). **Every confirmed hit plays
   a sound.**
@@ -475,7 +581,9 @@ These run all the time, so keep them cheap:
   - death fail sting and thud
   - slow-mo whoosh in and out
   - paw-print transition sound (reuse the crate one)
-- Mix check: wolf telegraphs must cut through the factory machine noise.
+- Mix check: wolf sounds and hit sounds must cut through the factory machine noise.
+- **Ice armour:** crack "tinks" per hit and the big layered shatter (section 2e).
+- **Damage numbers:** a tiny pop sound per number, a higher pitch for counters, charged hits and KOs.
 
 ---
 
@@ -487,8 +595,16 @@ Use the admin "Wolf test arena" and "Set time" commands:
 - [ ] Shadow is invisible at night beyond 18 studs (only the eyes show) and reveals properly; visible by day.
 - [ ] A wolf inside a factory with the door closed poofs through it with the effect and sound, both ways.
 - [ ] Lunge bars, Snap circles and every other ground effect sit on the floor on flat ground, ramps and stairs.
-- [ ] No raid text, no attack names, no damage numbers, no custom health bar. The Roblox health bar shows.
-      "DODGED" appears only on real dodges. The off-screen paw arrow works.
+- [ ] No raid text, no attack names, no custom player health bar. The Roblox health bar shows. "DODGED" appears
+      only on real dodges. The off-screen paw arrow works.
+- [ ] The new wolf health bar: gradient fill, segment dividers, damage chunk that drains, shake, shards, the enraged
+      and low states, the KO shatter, and it looks right on PC and mobile.
+- [ ] Damage numbers pop, arc and fade, with different looks for normal, counter, charged and KO hits, plus the
+      combo counter.
+- [ ] The day/night clock dial: the sky gradient changes, the sun and moon move smoothly, Full Moon looks special,
+      and the night warning pulses.
+- [ ] Breaking Frost armour plays the freeze-frame, shard explosion, shockwave and the ice shatter sound, and the bar's
+      armour segments shatter too.
 - [ ] The death cutscene:
   - [ ] slow-mo ragdoll in third person, with the death sound
   - [ ] pan to the wolf, which eats the best box and runs off with a pastry in its mouth
