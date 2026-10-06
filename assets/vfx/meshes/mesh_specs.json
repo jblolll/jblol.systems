@@ -1,0 +1,492 @@
+{
+ "ShockwaveRing": {
+  "note": "flat ring, radius 1, lies flat on the ground",
+  "parts": {
+   "ShockwaveRing": {
+    "size_studs_XYZ_roblox": [
+     2.0,
+     0.0,
+     2.0
+    ],
+    "tris": 512
+   }
+  }
+ },
+ "ShockwaveDome": {
+  "note": "half-sphere shell, radius 1, open at the bottom",
+  "parts": {
+   "ShockwaveDome": {
+    "size_studs_XYZ_roblox": [
+     2.0,
+     1.0,
+     2.0
+    ],
+    "tris": 2304
+   }
+  }
+ },
+ "SlashCrescent": {
+  "note": "crescent slash arc, radius 1, in the XZ plane (horizontal), sweeping around its front",
+  "parts": {
+   "SlashCrescent": {
+    "size_studs_XYZ_roblox": [
+     1.932,
+     0.1,
+     0.746
+    ],
+    "tris": 480
+   }
+  }
+ },
+ "WindCone": {
+  "note": "air-burst cone opening toward its front (-Z in Roblox = LookVector)",
+  "parts": {
+   "WindCone": {
+    "size_studs_XYZ_roblox": [
+     2.0,
+     2.0,
+     0.9
+    ],
+    "tris": 960
+   }
+  }
+ },
+ "LightPillar": {
+  "note": "open cylinder, radius 1, height 2, bright at the bottom fading to the top",
+  "parts": {
+   "LightPillar": {
+    "size_studs_XYZ_roblox": [
+     2.0,
+     2.0,
+     2.0
+    ],
+    "tris": 1536
+   }
+  }
+ },
+ "HowlRing": {
+  "note": "thin torus ring, radius 1 (sound-wave ring for Howl, Enrage pulse)",
+  "parts": {
+   "HowlRing": {
+    "size_studs_XYZ_roblox": [
+     2.1,
+     0.1,
+     2.1
+    ],
+    "tris": 1024
+   }
+  }
+ },
+ "GodRays": {
+  "note": "fan of light rays, radius 1, faces its front (point it at the camera)",
+  "parts": {
+   "GodRays": {
+    "size_studs_XYZ_roblox": [
+     1.769,
+     1.895,
+     0.0
+    ],
+    "tris": 56
+   }
+  }
+ },
+ "DizzyStars": {
+  "note": "ring of 5 cartoon stars (radius 0.62) that spins over a stunned head",
+  "parts": {
+   "DizzyStars": {
+    "size_studs_XYZ_roblox": [
+     1.261,
+     0.404,
+     1.274
+    ],
+    "tris": 100
+   }
+  }
+ },
+ "IceBlock": {
+  "note": "crystal ice block that encases a player (about 5 wide x 7 tall). IceBlockGlow = inner glow core",
+  "parts": {
+   "IceBlock": {
+    "size_studs_XYZ_roblox": [
+     6.335,
+     7.236,
+     5.959
+    ],
+    "tris": 458
+   },
+   "IceBlockGlow": {
+    "size_studs_XYZ_roblox": [
+     3.0,
+     5.2,
+     2.4
+    ],
+    "tris": 320
+   }
+  }
+ },
+ "IceShards": {
+  "note": "10 ice shard pieces for shatters (ice block break, ice armour break, spike crumble)",
+  "parts": {
+   "Shard1": {
+    "size_studs_XYZ_roblox": [
+     0.448,
+     0.991,
+     0.34
+    ],
+    "tris": 12
+   },
+   "Shard2": {
+    "size_studs_XYZ_roblox": [
+     0.61,
+     0.782,
+     0.517
+    ],
+    "tris": 10
+   },
+   "Shard3": {
+    "size_studs_XYZ_roblox": [
+     1.234,
+     1.649,
+     0.981
+    ],
+    "tris": 12
+   },
+   "Shard4": {
+    "size_studs_XYZ_roblox": [
+     1.038,
+     1.435,
+     0.992
+    ],
+    "tris": 10
+   },
+   "Shard5": {
+    "size_studs_XYZ_roblox": [
+     0.42,
+     0.648,
+     0.192
+    ],
+    "tris": 12
+   },
+   "Shard6": {
+    "size_studs_XYZ_roblox": [
+     0.666,
+     2.265,
+     0.702
+    ],
+    "tris": 10
+   },
+   "Shard7": {
+    "size_studs_XYZ_roblox": [
+     0.401,
+     0.851,
+     0.287
+    ],
+    "tris": 10
+   },
+   "Shard8": {
+    "size_studs_XYZ_roblox": [
+     0.822,
+     1.622,
+     0.582
+    ],
+    "tris": 10
+   },
+   "Shard9": {
+    "size_studs_XYZ_roblox": [
+     0.514,
+     1.496,
+     0.516
+    ],
+    "tris": 12
+   },
+   "Shard10": {
+    "size_studs_XYZ_roblox": [
+     0.96,
+     0.988,
+     0.432
+    ],
+    "tris": 12
+   }
+  }
+ },
+ "IceSpikes": {
+  "note": "3 ice spike clusters; base at the bottom of the mesh (spawn it below the floor and pop it up)",
+  "parts": {
+   "IceSpikeA": {
+    "size_studs_XYZ_roblox": [
+     2.03,
+     3.636,
+     1.55
+    ],
+    "tris": 100
+   },
+   "IceSpikeB": {
+    "size_studs_XYZ_roblox": [
+     1.514,
+     2.856,
+     1.808
+    ],
+    "tris": 124
+   },
+   "IceSpikeC": {
+    "size_studs_XYZ_roblox": [
+     1.961,
+     3.207,
+     1.595
+    ],
+    "tris": 100
+   }
+  }
+ },
+ "BreathCone": {
+  "note": "two nested cones, length 1, opening forward. Scale to (8.4, 8.4, 10) for Frost Breath",
+  "parts": {
+   "BreathCone": {
+    "size_studs_XYZ_roblox": [
+     0.84,
+     0.84,
+     1.0
+    ],
+    "tris": 2560
+   }
+  }
+ },
+ "IceArmour": {
+  "note": "ice crystals modelled on the Frost Wolf's back and shoulders",
+  "parts": {
+   "IceArmour": {
+    "size_studs_XYZ_roblox": [
+     1.296,
+     1.198,
+     1.76
+    ],
+    "tris": 840
+   }
+  },
+  "offset_from_wolf_mesh_center_roblox": [
+   0.058,
+   0.599,
+   0.106
+  ]
+ },
+ "StarOrb": {
+  "note": "Star Orb: a faceted 3D star (Neon) + a galaxy glow ball behind it",
+  "parts": {
+   "StarOrb": {
+    "size_studs_XYZ_roblox": [
+     0.951,
+     0.905,
+     0.4
+    ],
+    "tris": 20
+   },
+   "StarOrbGlow": {
+    "size_studs_XYZ_roblox": [
+     0.84,
+     0.84,
+     0.84
+    ],
+    "tris": 320
+   }
+  }
+ },
+ "StarBurst": {
+  "note": "spiky 3D starburst, radius 1 (blink out/in, star impacts, KO flash)",
+  "parts": {
+   "StarBurst": {
+    "size_studs_XYZ_roblox": [
+     1.54,
+     1.56,
+     1.464
+    ],
+    "tris": 272
+   }
+  }
+ },
+ "BlinkStreak": {
+  "note": "spindle of light, length 2 along its front axis (stretch it between blink points)",
+  "parts": {
+   "BlinkStreak": {
+    "size_studs_XYZ_roblox": [
+     0.5,
+     0.5,
+     2.0
+    ],
+    "tris": 1152
+   }
+  }
+ },
+ "Meteor": {
+  "note": "star meteor (radius 1) + a 4.5-stud tapered light tail behind it",
+  "parts": {
+   "Meteor": {
+    "size_studs_XYZ_roblox": [
+     1.902,
+     1.809,
+     0.9
+    ],
+    "tris": 20
+   },
+   "MeteorTail": {
+    "size_studs_XYZ_roblox": [
+     1.7,
+     1.7,
+     4.5
+    ],
+    "tris": 2048
+   }
+  }
+ },
+ "Fireball": {
+  "note": "rolling fire sphere (radius 1) + a bigger flickering shell",
+  "parts": {
+   "Fireball": {
+    "size_studs_XYZ_roblox": [
+     2.13,
+     2.123,
+     2.103
+    ],
+    "tris": 1280
+   },
+   "FireballShell": {
+    "size_studs_XYZ_roblox": [
+     2.699,
+     2.661,
+     2.765
+    ],
+    "tris": 320
+   }
+  }
+ },
+ "FireRing": {
+  "note": "ring wall of flames, radius 1, height 0.8 (Ember Burst, fireball impact)",
+  "parts": {
+   "FireRing": {
+    "size_studs_XYZ_roblox": [
+     2.24,
+     0.8,
+     2.24
+    ],
+    "tris": 1024
+   }
+  }
+ },
+ "Debris": {
+  "note": "6 small charred rock chunks for impacts",
+  "parts": {
+   "Rock1": {
+    "size_studs_XYZ_roblox": [
+     1.147,
+     1.143,
+     1.261
+    ],
+    "tris": 10
+   },
+   "Rock2": {
+    "size_studs_XYZ_roblox": [
+     0.453,
+     0.808,
+     0.797
+    ],
+    "tris": 12
+   },
+   "Rock3": {
+    "size_studs_XYZ_roblox": [
+     0.512,
+     0.332,
+     0.455
+    ],
+    "tris": 16
+   },
+   "Rock4": {
+    "size_studs_XYZ_roblox": [
+     1.174,
+     0.977,
+     1.219
+    ],
+    "tris": 8
+   },
+   "Rock5": {
+    "size_studs_XYZ_roblox": [
+     0.899,
+     0.94,
+     0.886
+    ],
+    "tris": 10
+   },
+   "Rock6": {
+    "size_studs_XYZ_roblox": [
+     0.837,
+     0.686,
+     0.952
+    ],
+    "tris": 12
+   }
+  }
+ },
+ "FlameStreak": {
+  "note": "comet-shaped flame streak, length 2.4 (Flame Dash body)",
+  "parts": {
+   "FlameStreak": {
+    "size_studs_XYZ_roblox": [
+     0.492,
+     0.492,
+     2.4
+    ],
+    "tris": 960
+   }
+  }
+ },
+ "ClawSlash": {
+  "note": "3 parallel claw slashes, about 2 studs long, in a vertical plane",
+  "parts": {
+   "ClawSlash": {
+    "size_studs_XYZ_roblox": [
+     0.49,
+     1.54,
+     0.746
+    ],
+    "tris": 1080
+   }
+  }
+ },
+ "ShadowTendrils": {
+  "note": "7 curling smoke tendrils rising from a point (Vanish, Darkness)",
+  "parts": {
+   "ShadowTendrils": {
+    "size_studs_XYZ_roblox": [
+     1.511,
+     2.448,
+     1.698
+    ],
+    "tris": 2240
+   }
+  }
+ },
+ "AuraShell": {
+  "note": "energy shell that wraps the whole wolf (Enrage aura, Celestial decoy shimmer, spawn shield)",
+  "parts": {
+   "AuraShell": {
+    "size_studs_XYZ_roblox": [
+     1.56,
+     3.0,
+     4.1
+    ],
+    "tris": 3072
+   }
+  }
+ },
+ "Coin": {
+  "note": "game coin with a paw emblem, 1 stud wide (coin reward fountain)",
+  "parts": {
+   "Coin": {
+    "size_studs_XYZ_roblox": [
+     1.0,
+     1.0,
+     0.12
+    ],
+    "tris": 384
+   }
+  }
+ }
+}
