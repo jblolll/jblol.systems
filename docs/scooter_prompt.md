@@ -8,6 +8,18 @@ handlebar**, and can **ride while holding boxes**. The wheels spin and the handl
 It must look and feel like a polished front-page Roblox game: smooth riding animation, believable steering, tidy
 effects, good sounds and no bugs.
 
+> **Model update (v2):** the scooter is now a regular **Razor-style kick scooter**. The first version looked like a
+> motorbike and has been replaced. The new one has:
+> - a thin, low deck with grip tape, small 0.42-radius wheels and a thin T-bar stem
+> - a slim neck and a rear fender brake
+> - **no headlight**, and 4 parts instead of 5
+>
+> **If you already set up the old one:**
+> - swap in the new model
+> - delete everything for the `Headlight` part (Neon, SpotLight, night toggle)
+> - replace every position, axis, radius and offset with the numbers below
+> - redo the wheel spin (`/ 0.42`) and the steering axis (20° rake)
+
 ---
 
 ## 0. Before you build anything
@@ -20,17 +32,17 @@ effects, good sounds and no bugs.
    - the controls on PC, mobile and gamepad
    - the speed/acceleration numbers, and the sounds and effects it uses
    - the caddy/pickup README texture note: `assets/caddy/README.md`
-2. **Inspect the scooter in Workspace.** It should have 5 MeshParts:
+2. **Inspect the scooter in Workspace.** It should have 4 MeshParts:
 
    | Part | Notes |
    |---|---|
-   | `Body` | deck, head tube, rear fork and fender |
-   | `Steering` | fork, front fender, stem, handlebar, grips, bell, headlight housing. **This turns.** |
-   | `Headlight` | the lens (make it Neon + a light) |
-   | `WheelF`, `WheelR` | pivot is the axle centre, axle along X, radius 0.75 |
+   | `Body` | deck with grip tape, neck, head tube, rear dropouts, fender brake, kickstand |
+   | `Steering` | fork, stem, clamp collar, T-bar, foam grips, bell. **This turns.** |
+   | `WheelF`, `WheelR` | pivot is the axle centre, axle along X, radius 0.42 |
 
    Tell me which version of the textures is on it and check the sizes against `assets/scooter/README.md`
-   (about 1.6 studs wide deck, 6.2 long, 3.8 tall, handlebar 2.7 wide).
+   (deck about 1.15 studs wide, about 5.4 long overall, 3.4 tall, handlebar 2.5 wide). If it still has a
+   `Headlight` part, it's the old model: tell me.
 3. Tell me **which rig my players use** (R15 or R6) and whether the bike's riding animation is an uploaded Animation
    asset or procedural.
 4. **Back up** anything you change (an `_OLD` copy, disabled) and show me a short plan, then build it.
@@ -51,7 +63,7 @@ effects, good sounds and no bugs.
   every other upgrade (engine, nitro, capacity, and so on).
 - **Paint:** the same 5 paints as the caddy and pickup, **red, blue, green, yellow, pink**. The scooter has
   one texture per paint (`scooter_<paint>.png`, all the parts share the same UVs), so a paint job is setting
-  `TextureID` on **all 5 MeshParts**. Use the same save/apply code as the bike's paint. The default paint is
+  `TextureID` on **all 4 MeshParts**. Use the same save/apply code as the bike's paint. The default paint is
   the player's saved paint, or red.
   - I'll upload the 5 textures and give you the asset IDs. **Ask me for them. Don't use placeholder IDs.**
   - Don't change `Material`/`Color` on the parts (the colours are in the texture).
@@ -76,15 +88,15 @@ effects, good sounds and no bugs.
 All positions are in Roblox axes, **relative to the `Body` MeshPart's centre**, and the front of the scooter is -Z.
 
 ### Wheels
-- `WheelF` at (0, -0.843, -2.741), `WheelR` at (0, -0.843, 1.709). Axle along X, radius 0.75.
-- Spin each wheel around **its own X axis** by **`-speed / 0.75` radians per second** when rolling forward (reverse
+- `WheelF` at (0, -0.625, -2.586), `WheelR` at (0, -0.625, 1.864). Axle along X, radius 0.42.
+- Spin each wheel around **its own X axis** by **`-speed / 0.42` radians per second** when rolling forward (reverse
   the sign when going backward). Do it on the client from the vehicle's real speed.
 - Slight wobble on rough ground is welcome but optional.
 
 ### Steering (the handlebar)
-- `Steering`, `Headlight` and `WheelF` **all turn together** around the head-tube axis:
-  - **axis point:** (0, 0.257, -2.361)
-  - **axis direction (up and slightly back):** (0, 0.9703, 0.2419)
+- `Steering` and `WheelF` **turn together** around the head-tube axis (tilted back 20°):
+  - **axis point:** (0, -0.625, -2.486) (on the axis, at axle height)
+  - **axis direction (up and slightly back):** (0, 0.9397, 0.342)
 - Steering angle **up to ±28°**, following the player's steer input **smoothly** (about 0.1–0.15 s of damping,
   so it never snaps). It centres itself when there's no input.
 - CFrame math:
@@ -92,17 +104,15 @@ All positions are in Roblox axes, **relative to the `Body` MeshPart's centre**, 
   local axisCF = bodyCF * CFrame.fromMatrix(AXIS_POINT, right, AXIS_UP, back) -- build a frame whose Y axis is AXIS_DIR
   local turn = axisCF * CFrame.Angles(0, steerAngle, 0) * axisCF:Inverse()
   steering.CFrame = turn * steeringRestCF
-  headlight.CFrame = turn * headlightRestCF
   wheelF.CFrame  = turn * wheelFRestCF * CFrame.Angles(-spin, 0, 0)   -- also spins around its axle
   ```
   (Use `Motor6D`s, welds, or per-frame CFrames, whichever my bike uses. Do it on the client for smoothness.)
 - The rider's **hands stay on the grips** while the handlebar turns (see the animation section).
 
-### Bell and light
-- **Bell:** a short "ting" with a small gold sparkle at the bell (position (0.42, 2.107, -1.926)) when the player
+### Bell
+- **Bell:** a short "ting" with a small gold sparkle at the bell (position (0.40, 2.385, -1.438)) when the player
   presses the horn key (use the bike's horn key and mobile button if it has one; otherwise `H`). Cooldown 0.4 s.
-- **Headlight:** make `Headlight` **Neon** (warm white) with a small `SpotLight` (range 25, angle 60°), and turn it
-  **on at night/dusk** only (use the day/night phase if it exists, otherwise `Lighting.ClockTime`).
+- It's a kick scooter: **no headlight and no engine**. Don't add lights or engine sounds.
 
 ---
 
@@ -111,11 +121,14 @@ The rider **stands on the deck** facing forward, holding the handlebar. Position
 
 | Point | Position |
 |---|---|
-| Deck top (sole level) | Y = -0.389 |
-| Front foot (left) | (-0.38, -0.393, -0.991) |
-| Back foot (right) | (0.38, -0.393, 0.009) |
-| Left grip | (-1.03, 2.007, -1.926) |
-| Right grip | (1.03, 2.007, -1.926) |
+| Deck top (sole level) | Y = -0.400 |
+| Front foot (left) | (-0.16, -0.400, -0.486) |
+| Back foot (right) | (0.16, -0.400, 0.714) |
+| Left grip | (-0.91, 2.255, -1.438) |
+| Right grip | (0.91, 2.255, -1.438) |
+
+The deck is narrow (1.15 studs), so the feet stand **one behind the other** (left in front), both near the
+centre line, like on a real kick scooter. The grips are at about waist height for an R15 character.
 
 See `assets/scooter/scooter_rider_pose.png` for the stance I want.
 
@@ -134,14 +147,15 @@ between states over 0.1–0.25 s. Nothing should snap, slide, float or clip.
 | **Push-off** (starting from a stop, or after braking) | the **back foot comes off the deck, kicks the ground behind** (2–3 pushes, about 0.45 s each) while the front leg stays bent and the body leans forward; the scooter accelerates with each kick. The foot touches the ground (raycast) and a small dust puff plays. |
 | **Glide (cruising)** | back foot returns to the deck, both knees bent about 20°, a relaxed lean forward, a tiny up-down bob with the speed, hair/clothes steady. Every 6–8 s of cruising at speed, one extra **small kick** for style. |
 | **Turning** | the body **leans into the turn** (torso roll up to 10° toward the inside, hips shift slightly), the head looks into the turn, the arms follow the handlebar so **the hands stay glued to the grips** as it rotates |
-| **Braking** | the back foot **stomps onto the rear fender** (the foot goes to about (0, 0.55, 2.3) from `Body`), the body leans back about 10°, arms straighten. A short skid sound, and tiny sparks/dust at the rear wheel. |
+| **Braking** | the back foot **stomps onto the rear fender brake** (the sole goes to about (0, -0.115, 1.864) from `Body`, the
+top of the fender), the body leans back about 10°, arms straighten. A short skid sound, and tiny sparks/dust at the rear wheel. |
 | **Going over a bump/jump** | knees absorb it (squash down 0.2 studs), arms stay on the bars. In the air, legs tuck slightly. A small landing squash. |
 | **Reversing** | slow walk-backward shuffle: the back foot pushes the other way, the body upright |
 
 ### Riding while holding boxes
 - Use my existing **carry-box pose** (both hands on the box stack in front of the chest), **plus the standing stance
   on the deck**. The **hands hold the boxes, not the grips**. The handlebar still steers visually.
-- **The stack must clear the handlebar and the bell:** the bottom of the carried boxes should sit **above Y = 2.4**
+- **The stack must clear the handlebar and the bell:** the bottom of the carried boxes should sit **above Y = 2.605**
   (from `Body`) at the grips. If the existing carry offset puts them lower, raise the stack while riding and
   lower it again when the rider gets off. **Test with the maximum stack the game allows**, so it never clips
   through the bars or hides the whole screen (also check the camera).
@@ -187,7 +201,6 @@ If the VFX pack from my wolf prompts is set up (`VFXAssets`), reuse `fb_smoke_4x
 | Bell | a small gold sparkle ring at the bell (no text) |
 | Fast turns | a soft dust puff from the outer wheel |
 | Landing | a small dust ring under the wheels |
-| Night | the headlight glow (SpotLight + a soft cone), and a small red glow at the rear reflector |
 | Mounting/changing paint | a quick sparkle pop on the scooter |
 
 Effects only render for players within about 80 studs.
@@ -225,13 +238,13 @@ Add to my owner-only admin panel (same style and permission checks):
 ## 10. Test before you tell me it's done
 - [ ] A **new player** spawns with the scooter available, and an existing save also gets it.
 - [ ] It's clearly slower than the bike but faster than walking. Report the speeds.
-- [ ] Wheels spin at the right speed, the handlebar, front wheel and headlight turn together around the tilted axis, and
+- [ ] Wheels spin at the right speed, the handlebar and front wheel turn together around the tilted axis, and
       the hands stay on the grips at full lock both ways.
 - [ ] The feet stay planted on the deck (no sliding or floating) in every state: idle, push, glide, turn, brake,
       bump, reverse.
 - [ ] Riding with boxes works with the max stack: nothing clips through the bars or the bell, the camera is
       usable, and delivering/dropping boxes works.
-- [ ] All 5 paints apply to all 5 parts, are saved, and the UI shows only the paint option.
+- [ ] All 5 paints apply to all 4 parts, are saved, and the UI shows only the paint option.
 - [ ] Sounds and effects play, are quiet and positional, and clean up.
 - [ ] Other players see everything correctly. No errors in the output. The frame rate stays smooth with 20 players
       riding.
